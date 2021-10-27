@@ -38,6 +38,39 @@ func totalAdd(numbers ...int) int {
 	return sum
 }
 
+func checkDrink(age int) bool {
+	if koreanAge := age + 1; koreanAge < 20 {
+		return false
+	} else if age < 30 {
+		koreanAge = 10
+	}
+	return true
+}
+
+// func checkDrinkSwitch(age int) bool {
+// 	switch {
+// 	case age < 20:
+// 		return false
+// 	case age == 20:
+// 		return true
+// 	case age > 50:
+// 		return false
+// 	}
+// 	return true
+// }
+
+func checkDrinkSwitch(age int) bool {
+	switch koreanAge := age + 1; koreanAge {
+	case 10:
+		return false
+	case 20:
+		return true
+	case 50:
+		return false
+	}
+	return true // default
+}
+
 func main() {
 	// const name string = "dasomi"
 	// var name string = "dasomi"
@@ -51,5 +84,13 @@ func main() {
 	// showArguments("a", "b", "c", "d")
 
 	// fmt.Println(totalAdd(7, 8, 3, 4, 5, 6))
-	fmt.Println(totalAdd(1, 2, 3, 4, 5))
+	// fmt.Println(totalAdd(1, 2, 3, 4, 5))
+	// fmt.Println(checkDrink(50))
+	// fmt.Println(checkDrinkSwitch(59))
+	// arr := [5]int{1, 2, 3, 4, 5}
+	a := 1
+	b := &a
+	*b = 10
+	fmt.Println(b, *b)
+	fmt.Println(a)
 }
