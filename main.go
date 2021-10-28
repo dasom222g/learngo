@@ -88,9 +88,50 @@ func main() {
 	// fmt.Println(checkDrink(50))
 	// fmt.Println(checkDrinkSwitch(59))
 	// arr := [5]int{1, 2, 3, 4, 5}
-	a := 1
-	b := &a
-	*b = 10
-	fmt.Println(b, *b)
-	fmt.Println(a)
+	// a := 1
+	// b := &a
+	// *b = 10
+	// fmt.Println(b, *b)
+	// fmt.Println(a)
+
+	// arr := []string{"dasom", "kelly"}
+	// arr = append(arr, "test")
+	// fmt.Println(arr)
+
+	// obj := map[string]bool{
+	// 	"isError": false,
+	// 	"isValid": false,
+	// }
+
+	// for key, value := range obj {
+	// 	fmt.Println(key, value)
+	// }
+	// fmt.Println(obj)
+
+	type person struct {
+		name     string
+		age      int
+		favFoods []string
+	}
+
+	favFoods := []string{"pringles", "pasta"}
+
+	personArr := []person{}
+	dasom := person{
+		name:     "dasom",
+		age:      32,
+		favFoods: favFoods,
+	}
+	song := person{
+		name:     "song",
+		age:      26,
+		favFoods: favFoods,
+	}
+	personArr = append(personArr, dasom, song)
+	fmt.Println(personArr)
+
+	for index, person := range personArr {
+		fmt.Println(index, person.name)
+	}
+	fmt.Println(dasom)
 }
