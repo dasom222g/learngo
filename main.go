@@ -9,8 +9,11 @@ import (
 func main() {
 	newAccount := banking.NewAccount("dasom") // account 생성
 	newAccount.Deposit(100)
-	newAccount.Deposit(300)
-	newAccount.GetBalance()
+	error := newAccount.Withdraw(500)
+	if error != nil {
+		// log.Fatal(error)
+		fmt.Println(error)
+	}
 
-	fmt.Println("GetBalance", newAccount.GetBalance())
+	fmt.Println(newAccount)
 }
