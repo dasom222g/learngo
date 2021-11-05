@@ -20,7 +20,19 @@ func main() {
 
 		fmt.Println(newAccount)
 	*/
-	dictionary := mydict.Dictionary{}
-	dictionary["name"] = "dasom"
-	fmt.Println(dictionary)
+	dictionary :=
+		mydict.Dictionary{
+			"name":     "kelly",
+			"homeTown": "Daejeon",
+		}
+	// dictionary := mydict.Dictionary{}
+	// dictionary["name"] = "dasom"
+	// fmt.Println(dictionary)
+
+	value, error := dictionary.Search("age")
+	if error != nil {
+		fmt.Println("error!!!!", error)
+		return
+	}
+	fmt.Println("value!!!", value)
 }
