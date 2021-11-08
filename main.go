@@ -23,16 +23,38 @@ func main() {
 	dictionary :=
 		mydict.Dictionary{
 			"name":     "kelly",
-			"homeTown": "Daejeon",
+			"hometown": "Daejeon",
 		}
 	// dictionary := mydict.Dictionary{}
 	// dictionary["name"] = "dasom"
 	// fmt.Println(dictionary)
 
-	value, error := dictionary.Search("age")
-	if error != nil {
-		fmt.Println("error!!!!", error)
-		return
+	// value, getError := dictionary.Search("name")
+	// if getError != nil {
+	// 	fmt.Println("error!!!!", getError)
+	// 	return
+	// }
+	// fmt.Println("value!!!", value)
+
+	addError := dictionary.Add("age", "32")
+	if addError != nil {
+		fmt.Println("addError", addError)
+	} else {
+		fmt.Println("add done.", dictionary)
 	}
-	fmt.Println("value!!!", value)
+
+	updateError := dictionary.Update("age", "30")
+	if updateError != nil {
+		fmt.Println("updateError", updateError)
+	} else {
+		fmt.Println("update done", dictionary)
+	}
+
+	deleteError := dictionary.Delete("age")
+	if deleteError != nil {
+		fmt.Println("deleteError", deleteError)
+	} else {
+		fmt.Println("hometown delete done", dictionary)
+	}
+
 }
