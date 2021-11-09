@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
-
 	// "github.com/dasom222g/learngo/banking"
+	"errors"
+	"fmt"
+	"net/http"
+
 	"github.com/dasom222g/learngo/mydict"
 )
 
@@ -38,23 +40,63 @@ func main() {
 
 	addError := dictionary.Add("age", "32")
 	if addError != nil {
-		fmt.Println("addError", addError)
+		// fmt.Println("addError", addError)
 	} else {
-		fmt.Println("add done.", dictionary)
+		// fmt.Println("add done.", dictionary)
 	}
 
 	updateError := dictionary.Update("age", "30")
 	if updateError != nil {
-		fmt.Println("updateError", updateError)
+		// fmt.Println("updateError", updateError)
 	} else {
-		fmt.Println("update done", dictionary)
+		// fmt.Println("update done", dictionary)
 	}
 
 	deleteError := dictionary.Delete("age")
 	if deleteError != nil {
-		fmt.Println("deleteError", deleteError)
+		// fmt.Println("deleteError", deleteError)
 	} else {
-		fmt.Println("hometown delete done", dictionary)
+		// fmt.Println("hometown delete done", dictionary)
 	}
 
+	/*  URL CHECKER & GO ROUTINES */
+	results := make(map[string]string)
+
+	urls := []string{
+		"https://www.airbnb.com/",
+		"https://www.google.com/",
+		"https://www.amazon.com/",
+		"https://www.reddit.com/",
+		"https://www.google.com/",
+		"https://soundcloud.com/",
+		"https://www.facebook.com/",
+		"https://www.instagram.com/",
+		"https://academy.nomadcoders.co/",
+	}
+
+	for _, url := range urls {
+		resultCode := "OK"
+		err := hitUrl(url)
+		if err != nil {
+			resultCode = "FAILED"
+		}
+		results[url] = resultCode
+	}
+
+	for url, resultCode := range results {
+		fmt.Println(url, resultCode)
+	}
+
+}
+
+var errorRequestFailed = errors.New("Failed to get data.")
+
+func hitUrl(url string) error {
+	fmt.Println("checking url", url)
+	response, err := http.Get(url)
+	if err != nil || response.StatusCode >= 400 {
+		return errorRequestFailed
+	}
+	// 유효할 경우
+	return nil
 }
