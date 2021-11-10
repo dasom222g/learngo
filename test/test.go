@@ -1,137 +1,102 @@
 package test
 
 import (
+	// "github.com/dasom222g/learngo/banking"
+	"errors"
 	"fmt"
-	"strings"
+	"net/http"
+
+	"github.com/dasom222g/learngo/mydict"
 )
 
-func add(a, b int) int {
-	defer fmt.Println("It is done.")
-	fmt.Println("method==>", a+b)
-	return a + b
-}
+func main() {
+	// account
+	/*
+		newAccount := banking.NewAccount("dasom") // account 생성
+		newAccount.Deposit(100)
+		error := newAccount.Withdraw(500)
+		if error != nil {
+			// log.Fatal(error)
+			fmt.Println(error)
+		}
 
-func lenAndUpperName(name string) (length int, upperName string) {
-	length = len(name)
-	upperName = strings.ToUpper(name)
-	return
-}
+		fmt.Println(newAccount)
+	*/
+	dictionary :=
+		mydict.Dictionary{
+			"name":     "kelly",
+			"hometown": "Daejeon",
+		}
+	// dictionary := mydict.Dictionary{}
+	// dictionary["name"] = "dasom"
+	// fmt.Println(dictionary)
 
-func showArguments(words ...string) {
-	fmt.Println(words)
-}
-
-// func totalAdd(numbers ...int) int {
-// 	sum := 0
-// 	for index, number := range numbers {
-// 		sum += number
-// 		fmt.Println(index, number)
-// 	}
-// 	return sum
-// }
-
-func totalAdd(numbers ...int) int {
-	sum := 0
-	for i := 0; i < len(numbers); i++ {
-		sum += numbers[i]
-	}
-	return sum
-}
-
-func checkDrink(age int) bool {
-	if koreanAge := age + 1; koreanAge < 20 {
-		return false
-	} else if age < 30 {
-		koreanAge = 10
-	}
-	return true
-}
-
-// func checkDrinkSwitch(age int) bool {
-// 	switch {
-// 	case age < 20:
-// 		return false
-// 	case age == 20:
-// 		return true
-// 	case age > 50:
-// 		return false
-// 	}
-// 	return true
-// }
-
-func checkDrinkSwitch(age int) bool {
-	switch koreanAge := age + 1; koreanAge {
-	case 10:
-		return false
-	case 20:
-		return true
-	case 50:
-		return false
-	}
-	return true // default
-}
-
-func test() {
-	// const name string = "dasomi"
-	// var name string = "dasomi"
-	// name := "dasomi"
-	// fmt.Println("name", name)
-
-	// fmt.Println("result", add(10, 20))
-	// len, upperName := lenAndUpperName("dasomi")
-	// fmt.Println("lenAndUpperName===>", len, upperName)
-
-	// showArguments("a", "b", "c", "d")
-
-	// fmt.Println(totalAdd(7, 8, 3, 4, 5, 6))
-	// fmt.Println(totalAdd(1, 2, 3, 4, 5))
-	// fmt.Println(checkDrink(50))
-	// fmt.Println(checkDrinkSwitch(59))
-	// arr := [5]int{1, 2, 3, 4, 5}
-	// a := 1
-	// b := &a
-	// *b = 10
-	// fmt.Println(b, *b)
-	// fmt.Println(a)
-
-	// arr := []string{"dasom", "kelly"}
-	// arr = append(arr, "test")
-	// fmt.Println(arr)
-
-	// obj := map[string]bool{
-	// 	"isError": false,
-	// 	"isValid": false,
+	// value, getError := dictionary.Search("name")
+	// if getError != nil {
+	// 	fmt.Println("error!!!!", getError)
+	// 	return
 	// }
+	// fmt.Println("value!!!", value)
 
-	// for key, value := range obj {
-	// 	fmt.Println(key, value)
-	// }
-	// fmt.Println(obj)
-
-	type person struct {
-		name     string
-		age      int
-		favFoods []string
+	addError := dictionary.Add("age", "32")
+	if addError != nil {
+		// fmt.Println("addError", addError)
+	} else {
+		// fmt.Println("add done.", dictionary)
 	}
 
-	favFoods := []string{"pringles", "pasta"}
+	updateError := dictionary.Update("age", "30")
+	if updateError != nil {
+		// fmt.Println("updateError", updateError)
+	} else {
+		// fmt.Println("update done", dictionary)
+	}
 
-	personArr := []person{}
-	dasom := person{
-		name:     "dasom",
-		age:      32,
-		favFoods: favFoods,
+	deleteError := dictionary.Delete("age")
+	if deleteError != nil {
+		// fmt.Println("deleteError", deleteError)
+	} else {
+		// fmt.Println("hometown delete done", dictionary)
 	}
-	song := person{
-		name:     "song",
-		age:      26,
-		favFoods: favFoods,
-	}
-	personArr = append(personArr, dasom, song)
-	fmt.Println(personArr)
 
-	for index, person := range personArr {
-		fmt.Println(index, person.name)
+	/*  URL CHECKER & GO ROUTINES */
+	results := make(map[string]string)
+
+	urls := []string{
+		"https://www.airbnb.com/",
+		"https://www.google.com/",
+		"https://www.amazon.com/",
+		"https://www.reddit.com/",
+		"https://www.google.com/",
+		"https://soundcloud.com/",
+		"https://www.facebook.com/",
+		"https://www.instagram.com/",
+		"https://academy.nomadcoders.co/",
 	}
-	fmt.Println(dasom)
+
+	for _, url := range urls {
+		resultCode := "OK"
+		err := hitUrl(url)
+		if err != nil {
+			resultCode = "FAILED"
+		}
+		results[url] = resultCode
+	}
+
+	for url, resultCode := range results {
+		fmt.Println(url, resultCode)
+	}
+
+}
+
+var errorRequestFailed = errors.New("Failed to get data.")
+
+func hitUrl(url string) error {
+	fmt.Println("checking url", url)
+	response, err := http.Get(url)
+	if err != nil || response.StatusCode >= 400 {
+		return errorRequestFailed
+	}
+	// 유효할 경우
+	return nil
 }
