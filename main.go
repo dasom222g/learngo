@@ -146,5 +146,5 @@ func main() {
 
 	// ### goGroutines
 	go count("dasom")
-	count("kelly")
+	go count("kelly")
 }
