@@ -79,6 +79,13 @@ func count(person string) {
 	}
 }
 
+func isSexy(person string, channel chan bool) {
+	time.Sleep(time.Second * 1)
+	fmt.Println(person, " is sexy")
+	// 채널을 이용해 메세지(true)를 보냄
+	channel <- true
+}
+
 func main() {
 	// const name string = "dasomi"
 	// var name string = "dasomi"
@@ -145,6 +152,19 @@ func main() {
 	// fmt.Println(dasom)
 
 	// ### goGroutines
-	go count("dasom")
-	go count("kelly")
+	// go count("dasom")
+	// go count("kelly")
+	people := []string{"dasom", "kelly"}
+	channel := make(chan bool) // 채널 생성
+	// fmt.Println("channel", channel)
+
+	for _, person := range people {
+		go isSexy(person, channel)
+	}
+
+	// 메시지 받을때까지 main함수에서 기다림
+	channelMessage1 := <-channel
+	channelMessage2 := <-channel
+	fmt.Println("channelMessage1", channelMessage1)
+	fmt.Println("channelMessage2", channelMessage2)
 }
