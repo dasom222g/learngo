@@ -79,11 +79,10 @@ func count(person string) {
 	}
 }
 
-func isSexy(person string, channel chan bool) {
+func isSexy(person string, channel chan string) {
 	time.Sleep(time.Second * 1)
-	fmt.Println(person, " is sexy")
 	// 채널을 이용해 메세지(true)를 보냄
-	channel <- true
+	channel <- person + " is sexy"
 }
 
 func main() {
@@ -155,7 +154,7 @@ func main() {
 	// go count("dasom")
 	// go count("kelly")
 	people := []string{"dasom", "kelly"}
-	channel := make(chan bool) // 채널 생성
+	channel := make(chan string) // 채널 생성
 	// fmt.Println("channel", channel)
 
 	for _, person := range people {
@@ -163,8 +162,10 @@ func main() {
 	}
 
 	// 메시지 받을때까지 main함수에서 기다림
-	channelMessage1 := <-channel
-	channelMessage2 := <-channel
-	fmt.Println("channelMessage1", channelMessage1)
-	fmt.Println("channelMessage2", channelMessage2)
+	fmt.Println("waiting!!!")
+	for i := 0; i < len(people); i++ {
+		fmt.Println("wating", i)
+		fmt.Println("receive message=====", <-channel) // 메시지 받을때까지 기다림
+	}
+	fmt.Println("end!!!")
 }
