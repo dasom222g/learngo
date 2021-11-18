@@ -9,6 +9,11 @@ import (
 	"github.com/dasom222g/learngo/mydict"
 )
 
+type requestResult struct {
+	url    string
+	status string
+}
+
 func main() {
 	// account
 	/*
@@ -60,8 +65,9 @@ func main() {
 	}
 
 	/*  URL CHECKER & GO ROUTINES */
-	results := make(map[string]string)
-	ch := make(chan error)
+
+	resultMap := make(map[string]string)
+	ch := make(chan requestResult)
 	/*
 		[
 			{"https://www.airbnb.com/" : "OK"},
@@ -75,7 +81,6 @@ func main() {
 		"https://www.google.com/",
 		"https://www.amazon.com/",
 		"https://www.reddit.com/",
-		"https://www.google.com/",
 		"https://soundcloud.com/",
 		"https://www.facebook.com/",
 		"https://www.instagram.com/",
@@ -86,36 +91,24 @@ func main() {
 		go checkUrl(url, ch)
 	}
 
-	for _, url := range urls {
-		// fmt.Println("checkUrl 시작!!")
-		resultCode := "OK"
-		err := <-ch
-		// fmt.Println("checkUrl 끝!!", err)
-		if err != nil {
-			resultCode = "FAILED"
-		}
-		results[url] = resultCode
-		// fmt.Println("results", results)
+	for i := 0; i < len(urls); i++ {
+		message := <-ch
+		resultMap[message.url] = message.status
 	}
-	// for message := range ch {
-	// 	fmt.Println("message", message)
-	// }
 
-	for url, resultCode := range results {
-		fmt.Println(url, resultCode)
+	for url, status := range resultMap {
+		fmt.Println(url, status)
 	}
 
 }
 
 var errorRequestFailed = errors.New("Failed to get data.")
 
-func checkUrl(url string, ch chan<- error) {
-	fmt.Println("checking url", url)
+func checkUrl(url string, ch chan<- requestResult) {
 	response, err := http.Get(url)
+	status := "OK"
 	if err != nil || response.StatusCode >= 400 {
-		ch <- errorRequestFailed
-		return
+		status = "FAILED"
 	}
-	// 유효할 경우
-	ch <- nil
+	ch <- requestResult{url: url, status: status}
 }
